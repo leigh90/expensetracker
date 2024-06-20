@@ -1,8 +1,6 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from peach.extensions import db
-from flask_restful import Resource, Api
+# from flask_restful import Resource, Api
 from config import Config
 
 def create_app(config_class=Config):
@@ -12,9 +10,7 @@ def create_app(config_class=Config):
 
     # Initiate flask extensions  here 
     db.init_app(peach)
-    api = Api(peach)
-
-    
+    # api = Api(peach)
 
     # Register blueprints here
     from peach.main import leblueprint as main_bp

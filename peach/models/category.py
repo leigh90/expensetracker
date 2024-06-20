@@ -6,20 +6,9 @@ import datetime
 from sqlalchemy.sql import func
 
 
-# from .. import peach
-# from flask_sqlalchemy import SQLAlchemy
-# from sqlalchemy.sql import func
-# from sqlalchemy import Integer, String, ForeignKey, DateTime, DECIMAL, Numeric, List
-# from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-# from .models import Category
-# from app.extensions import db
 
-# import datetime
-# import decimal
-# import uuid
-# import enum, 
 
-class Category(db.Model):
+class Category(db.Model): # type: ignore
     """
     A category represents a type of expense frequently used
     """
@@ -29,7 +18,7 @@ class Category(db.Model):
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
 
-class Expense(db.Model):
+class Expense(db.Model):# type: ignore
     """
     An expense is an amount of money spent on a specific item 
     """
