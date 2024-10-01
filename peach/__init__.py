@@ -3,12 +3,17 @@ from peach.extensions import db
 # from flask_restful import Resource, Api
 from config import Config
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 def create_app(config_class=Config):
     peach = Flask(__name__)
+    CORS(peach)
     peach.config.from_object(config_class)
-    
+    peach.config['CORS_HEADERS'] = "Content-Type"
 
+    cors = CORS(peach, resources={r"/expenses/*": {"origins": "*"}})
+    
+    # breakpoint()  
     # Initiate flask extensions  here 
     db.init_app(peach)
     migrate = Migrate(peach, db)
