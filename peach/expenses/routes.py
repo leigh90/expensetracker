@@ -36,13 +36,26 @@ class ExpenseView(MethodView):
     
     def __init__(self, model):
         self.model = model
-        # self.validator = flask.generate_validator(model)
     
-    def get(self):
-        items = self.model.query.all()
-        return jsonify([item.to_json() for item in items])
-    
+    def get(self, category_name=None, id=None, **kwargs ):
+        if category_name:
+            print(category_name)
+            expenses = Expense.query.filter(Expense.category_name==category_name)
+            return jsonify([item.to_json() for item in expenses])
+        elif id: 
+            print(id)
+            expenses = Expense.query.filter(Expense.id==id)
+            return jsonify([item.to_json() for item in expenses])
+        else:
+            expenses = self.model.query.all()
+            return jsonify([item.to_json() for item in expenses])
 
+
+    
+    def get_expense_by_category(self, cat_name):
+        item = Expense.query().filter(Expense.category_name==cat_name)
+        return jsonify(item.to_json())
+        
 class AccountsView(MethodView):
     init_every_request = False
 
@@ -64,6 +77,10 @@ def register_api(app, model, name):
     accountitem = AccountsView.as_view(f"{name}-froup", model)
 
     expense_blueprint.add_url_rule(f"/{name}/",view_func=expenseitem)
+    expense_blueprint.add_url_rule(f"/{name}/<int:id>",view_func=expenseitem)
+    expense_blueprint.add_url_rule(f"/{name}/<string:category_name>",view_func=expenseitem)
+
+
     expense_blueprint.add_url_rule(f"/{name}/",view_func=accountitem)
 
 
