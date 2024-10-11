@@ -13,7 +13,6 @@ def create_app(config_class=Config):
 
     cors = CORS(peach, resources={r"/expenses/*": {"origins": "*"}})
     
-    # breakpoint()  
     # Initiate flask extensions  here 
     db.init_app(peach)
     migrate = Migrate(peach, db)
@@ -21,7 +20,7 @@ def create_app(config_class=Config):
 
     # Register blueprints here
     from peach.main import leblueprint as main_bp
-    peach.register_blueprint(main_bp)
+    peach.register_blueprint(main_bp, url_prefix='/main')
 
     from peach.expenses import expense_blueprint  as expense_bp
     peach.register_blueprint(expense_bp,url_prefix='/expenses' )
