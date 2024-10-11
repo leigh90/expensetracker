@@ -39,11 +39,9 @@ class ExpenseView(MethodView):
     
     def get(self, category_name=None, id=None, **kwargs ):
         if category_name:
-            print(category_name)
             expenses = Expense.query.filter(Expense.category_name==category_name)
             return jsonify([item.to_json() for item in expenses])
         elif id: 
-            print(id)
             expenses = Expense.query.filter(Expense.id==id)
             return jsonify([item.to_json() for item in expenses])
         else:
@@ -52,19 +50,33 @@ class ExpenseView(MethodView):
 
 
     
-    def get_expense_by_category(self, cat_name):
-        item = Expense.query().filter(Expense.category_name==cat_name)
-        return jsonify(item.to_json())
+    # def get_expense_by_category(self, cat_name):
+    #     item = Expense.query().filter(Expense.category_name==cat_name)
+    #     return jsonify(item.to_json())
         
-class AccountsView(MethodView):
+class AccountsViewAPI(MethodView):
     init_every_request = False
 
     def __init__(self, model):
         self.model = model
 
-    def get(self):
-        accounts = self.model.query.all()
-        return jsonify([accnt.to_json() for accnt in accounts])
+    def get(self, account_id=None, account_name=None, account_type=None, account_id_no=None, **kwargs):
+        if account_id:
+            print(account_id)
+            accounts =  Account.query.filter(Account.id==account_id)
+            return jsonify([item.to_json() for item in accounts])
+        elif account_name: 
+            accounts = Account.query.filter(Account.name== account_name)
+            return jsonify([item.to_json() for item in accounts])
+        # elif account_type: 
+        #     accounts = Account.query.filter(Account.type.name==type)
+        #     return jsonify([item.to_json() for item in accounts])
+        # elif account_id_no: 
+        #     accounts = Account.query.filter(Account.identification_number==account_id_no)
+        #     return jsonify([item.to_json() for item in accounts])
+        else:
+            accounts = self.model.query.all()
+            return jsonify([accnt.to_json() for accnt in accounts])
     
     # def post(self):
     #     db.session.add(self.model.from_json(flask.request.json))
@@ -74,7 +86,7 @@ class AccountsView(MethodView):
 
 def register_api(app, model, name):
     expenseitem = ExpenseView.as_view(f"{name}-item", model)
-    accountitem = AccountsView.as_view(f"{name}-froup", model)
+    accountitem = AccountsViewAPI.as_view(f"{name}", model)
 
     expense_blueprint.add_url_rule(f"/{name}/",view_func=expenseitem)
     expense_blueprint.add_url_rule(f"/{name}/<int:id>",view_func=expenseitem)
@@ -82,6 +94,15 @@ def register_api(app, model, name):
 
 
     expense_blueprint.add_url_rule(f"/{name}/",view_func=accountitem)
+    expense_blueprint.add_url_rule(f"/{name}/<int:account_id>",view_func=accountitem) 
+    expense_blueprint.add_url_rule(f"/{name}/<string:account_name>",view_func=accountitem)
+    # expense_blueprint.add_url_rule(f"/{name}/<string:account_id_no>",view_func=accountitem)
+    # expense_blueprint.add_url_rule(f"/{name}/<string:account_type>",view_func=accountitem)
+    # expense_blueprint.add_url_rule(f"/{name}/<string:type>",view_func=expenseitem)
+
+
+    
+
 
 
 
