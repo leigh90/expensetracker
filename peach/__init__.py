@@ -23,7 +23,7 @@ def create_app(config_class=Config):
     # peach.register_blueprint(main_bp, url_prefix='/')
 
     from peach.expenses import expense_blueprint  as expense_bp
-    peach.register_blueprint(expense_bp,url_prefix='/expenses' )
+    peach.register_blueprint(expense_bp,url_prefix='/expenses')
 
     from peach.swagger_docs import swagger_blueprint as swagger_bp
     peach.register_blueprint(swagger_bp,url_prefix='/swagger')
