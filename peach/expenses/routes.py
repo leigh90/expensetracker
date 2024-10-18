@@ -1,8 +1,11 @@
 # from flask import render_template, jsonify
-# from peach.expenses import expense_blueprint
-# from flask import jsonify, request
-# from peach.models.category import Expense, Category
-# from flask.views import MethodView
+from peach.expenses import expense_blueprint
+
+from .expenseview import ExpenseViewAPI
+from flask import jsonify, request
+from .models import Expense
+from . import expenseview
+from flask.views import MethodView
 # import datetime
 # import dateutil
 # from dateutil import parser 
@@ -18,20 +21,8 @@
 # # 7. Get sum of expenses in a time range. 
 
 
-
-from peach.expenses import expense_blueprint
-from peach.expenses.models import Expense, Account
-from flask.views import MethodView
-
-# from peach.models.category import Expense, Account, Wallet
-
-from flask import Flask, jsonify
-import flask
-import peach
-from peach.extensions import db
-
-class ExpenseView(MethodView):
-    init_every_request = False
+class ExpenseViewAPI(MethodView):
+    init_every_request = True
 
     
     def __init__(self, model):
@@ -47,64 +38,14 @@ class ExpenseView(MethodView):
         else:
             expenses = self.model.query.all()
             return jsonify([item.to_json() for item in expenses])
-
-
-    
-    # def get_expense_by_category(self, cat_name):
-    #     item = Expense.query().filter(Expense.category_name==cat_name)
-    #     return jsonify(item.to_json())
         
-class AccountsViewAPI(MethodView):
-    init_every_request = False
-
-    def __init__(self, model):
-        self.model = model
-
-    def get(self, account_id=None, account_name=None, account_type=None, account_id_no=None, **kwargs):
-        if account_id:
-            print(account_id)
-            accounts =  Account.query.filter(Account.id==account_id)
-            return jsonify([item.to_json() for item in accounts])
-        elif account_name: 
-            accounts = Account.query.filter(Account.name== account_name)
-            return jsonify([item.to_json() for item in accounts])
-        # elif account_type: 
-        #     accounts = Account.query.filter(Account.type.name==type)
-        #     return jsonify([item.to_json() for item in accounts])
-        # elif account_id_no: 
-        #     accounts = Account.query.filter(Account.identification_number==account_id_no)
-        #     return jsonify([item.to_json() for item in accounts])
-        else:
-            accounts = self.model.query.all()
-            return jsonify([accnt.to_json() for accnt in accounts])
-    
-    # def post(self):
-    #     db.session.add(self.model.from_json(flask.request.json))
-    #     db.session.commit()
-    #     return jsonify(item.to_json())
-
 
 def register_api(app, model, name):
-    expenseitem = ExpenseView.as_view(f"{name}-item", model)
-    accountitem = AccountsViewAPI.as_view(f"{name}", model)
+    expenseitem = ExpenseViewAPI.as_view(f"{name}", model)
 
-    expense_blueprint.add_url_rule(f"/{name}/",view_func=expenseitem)
+    expense_blueprint.add_url_rule(f"/{name}/", view_func=expenseitem)
     expense_blueprint.add_url_rule(f"/{name}/<int:id>",view_func=expenseitem)
     expense_blueprint.add_url_rule(f"/{name}/<string:category_name>",view_func=expenseitem)
 
-
-    expense_blueprint.add_url_rule(f"/{name}/",view_func=accountitem)
-    expense_blueprint.add_url_rule(f"/{name}/<int:account_id>",view_func=accountitem) 
-    expense_blueprint.add_url_rule(f"/{name}/<string:account_name>",view_func=accountitem)
-    # expense_blueprint.add_url_rule(f"/{name}/<string:account_id_no>",view_func=accountitem)
-    # expense_blueprint.add_url_rule(f"/{name}/<string:account_type>",view_func=accountitem)
-    # expense_blueprint.add_url_rule(f"/{name}/<string:type>",view_func=expenseitem)
-
-
-    
-
-
-
-
-register_api(peach, Expense, "expenses")
-register_api(peach, Account, "accounts") 
+expenseview.register_api(expense_blueprint, Expense, "expenses")
+# register_api(expense_blueprint, Account, "accounts") 

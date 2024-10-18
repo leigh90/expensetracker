@@ -165,7 +165,7 @@ class Expense(db.Model):# type: ignore
     notes: Mapped[str] =  mapped_column(String(150),nullable=True)
     category_name = mapped_column(ForeignKey("category.name"))
     user = mapped_column(ForeignKey("users.id"))
-
+ 
     def to_json(self):
         json_expense = {
             'id': self.id,

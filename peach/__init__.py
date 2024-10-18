@@ -19,8 +19,8 @@ def create_app(config_class=Config):
     # api = Api(peach)
 
     # Register blueprints here
-    from peach.main import leblueprint as main_bp
-    peach.register_blueprint(main_bp, url_prefix='/main')
+    # from peach.main import leblueprint as main_bp
+    # peach.register_blueprint(main_bp, url_prefix='/')
 
     from peach.expenses import expense_blueprint  as expense_bp
     peach.register_blueprint(expense_bp,url_prefix='/expenses' )
@@ -32,4 +32,5 @@ def create_app(config_class=Config):
     def test_page():
         return '<h2> Testing the flask application factory pattern</h2>'
     
+  
     return peach
