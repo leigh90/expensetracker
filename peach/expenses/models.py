@@ -176,6 +176,12 @@ class Expense(db.Model):# type: ignore
             'category_name': self.category_name,
         }
         return json_expense
+    
+    def from_json(self, new_expense):
+        body = new_expense.get('body')
+        # if body is None or body == '':
+            # raise ValidationError('post does not have a body')
+        return Expense(body=body)
 
 
 
