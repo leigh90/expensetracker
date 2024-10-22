@@ -1,8 +1,10 @@
 from . import expense_blueprint
-from .models import Expense, Account
+from .models import Expense, Account, Category
 
 from .expenseview import register_expense_api
 from .accountview import register_accounts_api
+from .categoryview import register_category_api
+
 
 # TODO
 # 1. View all expenses
@@ -18,3 +20,5 @@ from .accountview import register_accounts_api
 
 register_expense_api(expense_blueprint, Expense, "expenses")
 register_accounts_api(expense_blueprint, Account, "accounts") 
+register_category_api(expense_blueprint, Category, "categories") 
+
