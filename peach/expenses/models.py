@@ -89,6 +89,20 @@ class Category(db.Model): # type: ignore
     id: Mapped[int] = mapped_column(Integer,primary_key=True)
     name: Mapped[str] = mapped_column(String(50), unique=True)
 
+    def to_json(self):
+        json_category = {
+            'id': self.id,
+            'name': self.name,
+        }
+        return json_category
+    
+    def from_json(self, new_expense):
+        body = new_expense.get('body')
+        # if body is None or body == '':
+            # raise ValidationError('post does not have a body')
+        breakpoint()
+        return Expense(body=body)
+
 # class Expense(Transaction):# type: ignore
 #     """
 #     An expense is an amount of money spent on a specific item 
@@ -135,7 +149,7 @@ class Account(db.Model):
     def to_json(self):
         json_account = {
             'id': self.id,
-            'amount': self.name,
+            'name': self.name,
             'type': self.type.name,
             'identification_number':self.identification_number,
             'balance': self.balance,
@@ -176,6 +190,13 @@ class Expense(db.Model):# type: ignore
             'category_name': self.category_name,
         }
         return json_expense
+    
+    def from_json(self, new_expense):
+        body = new_expense.get('body')
+        # if body is None or body == '':
+            # raise ValidationError('post does not have a body')
+        breakpoint()
+        return Expense(body=body)
 
 
 
